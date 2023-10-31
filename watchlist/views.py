@@ -126,7 +126,7 @@ class StreamPlatformListView(APIView):
             Response: A JSON response containing a list of stream platforms.
         """
         queryset = StreamPlatform.objects.all()
-        serializer = self.serializer_class(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):

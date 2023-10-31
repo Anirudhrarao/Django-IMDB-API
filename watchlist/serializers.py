@@ -9,7 +9,7 @@ class WatchListSerializer(serializers.ModelSerializer):
     
 class StreamPlatformSerializer(serializers.ModelSerializer):
     # watchlist is name which is given in foreign key as related name
-    watchlist = WatchListSerializer(many=True, read_only=True)
+    watchlist = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name="movie-detail")
     
     class Meta:
         model = StreamPlatform
