@@ -1,20 +1,16 @@
 from rest_framework import serializers
-from watchlist.models import Movie
+from watchlist.models import WatchList, StreamPlatform
 
-class MovieSerializer(serializers.ModelSerializer):
-    length_name = serializers.SerializerMethodField()
+class WatchListSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Movie
+        model = WatchList
         fields = "__all__"
     
-    # custom fields of serializer
-    def get_length_name(self,object):
-        return len(object.name)
-    
-    def validate(self,data):
-        if data['name'] == data['description']:
-            raise serializers.ValidationError("Name and description of movie should not be the same.")
-        return data
 
+class StreamPlatformSerializer(serializers.ModelSerializer):
     
+    class Meta:
+        model = StreamPlatform
+        fields = "__all__"
+        
