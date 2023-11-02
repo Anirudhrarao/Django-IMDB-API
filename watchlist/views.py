@@ -1,9 +1,11 @@
 from rest_framework import status 
-from watchlist.models import WatchList, StreamPlatform
-from rest_framework.views import APIView
+from rest_framework import mixins 
+from rest_framework import generics
+from rest_framework.views import APIView 
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from watchlist.serializers import WatchListSerializer, StreamPlatformSerializer
+from watchlist.models import WatchList, StreamPlatform, Review
+from watchlist.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 
 class WatchListView(APIView):
     """
@@ -207,3 +209,75 @@ class StreamPlatformDetailView(APIView):
         platform = get_object_or_404(StreamPlatform, pk=pk)
         platform.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ReviewListView(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    generics.GenericAPIView
+):
+    """
+    A view for listing and creating review objects.
+
+    Supports GET (list) and POST (create) requests.
+    """
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handle GET request to list reviews.
+
+        :param request: The incoming GET request.
+        :return: List of review objects.
+        """
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST request to create a new review.
+
+        :param request: The incoming POST request.
+        :return: Created review object.
+        """
+        return self.create(request, *args, **kwargs)
+
+class ReviewDetailView(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView
+):
+    """
+    A view for retrieving, updating, and deleting a single review object.
+
+    Supports GET (retrieve), PUT (update), and DELETE (delete) requests.
+    """
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handle GET request to retrieve a single review.
+
+        :param request: The incoming GET request.
+        :return: Retrieved review object.
+        """
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        """
+        Handle PUT request to update a review.
+
+        :param request: The incoming PUT request.
+        :return: Updated review object.
+        """
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Handle DELETE request to delete a review.
+
+        :param request: The incoming DELETE request.
+        :return: HTTP 204 No Content on successful deletion.
+        """
+        return self.destroy(request, *args, **kwargs)
