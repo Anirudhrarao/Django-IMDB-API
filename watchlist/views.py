@@ -174,7 +174,7 @@ class StreamPlatformDetailView(APIView):
             Response: A JSON response containing the stream platform details.
         """
         platform = get_object_or_404(StreamPlatform, pk=pk)
-        serializer = self.serializer_class(platform)
+        serializer = self.serializer_class(platform,context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
